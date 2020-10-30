@@ -1,10 +1,9 @@
 const express = require('express')
 
 const startServer = require('./server')
+const articlesRouter = require('./routes/articlesRouter')()
 
 const app = express()
 startServer(app)
 
-app.get('/', (req, res) => {
-  res.json({ msg: 'Hello!' })
-})
+app.use('/api', articlesRouter)
