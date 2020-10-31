@@ -1,14 +1,16 @@
 const slugify = require('slugify')
 const { nanoid } = require('nanoid')
 
+const { badRequest } = require('../utils/error')()
+
 function articlesController(Article) {
-  async function createArticle(req, res) {
+  async function createArticle(req, res, next) {
     const { title, content, category } = req.body
 
     if (!title || !content || !category)
-      return res
-        .status(400)
-        .json({ error: 'Title, Content and Category are required' })
+      return next(
+        badRequest('Title, Content and Category are required'),
+      )
 
     const article = new Article({
       ...req.body,
@@ -19,14 +21,14 @@ function articlesController(Article) {
     return res.status(201).json(article)
   }
 
-  async function getArticleList(req, res) {
+  async function getArticleList(req, res, next) {
     const filter = {}
     const { category } = req.query
     if (category) filter.category = category
 
     const articles = await Article.find(filter, req.payload)
-    if (!articles)
-      return res.status(400).json({ error: 'No articles Found' })
+    if (articles.length < 1)
+      return next(badRequest('No articles Found'))
 
     return res.json(articles)
   }

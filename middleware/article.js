@@ -1,3 +1,5 @@
+const { badRequest } = require('../utils/error')()
+
 function article(Article) {
   async function includePayload(req, res, next) {
     const payload = {}
@@ -11,8 +13,7 @@ function article(Article) {
   async function fetchArticle(req, res, next) {
     const { slug } = req.params
     const article = await Article.findOne({ slug }, req.payload)
-    if (!article)
-      return res.status(400).json({ error: 'Article not found' })
+    if (!article) return next(badRequest('Article not found'))
 
     req.article = article
     return next()

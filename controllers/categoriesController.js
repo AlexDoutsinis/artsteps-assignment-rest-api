@@ -1,7 +1,8 @@
+const { badRequest } = require('../utils/error')()
+
 function categoryController(Category) {
-  async function createCategory(req, res) {
-    if (!req.body.name)
-      return res.status(400).json({ error: 'Name is required' })
+  async function createCategory(req, res, next) {
+    if (!req.body.name) return next(badRequest('Name is required'))
 
     const category = new Category(req.body)
     await category.save()
