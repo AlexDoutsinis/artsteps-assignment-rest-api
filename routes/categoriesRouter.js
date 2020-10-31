@@ -19,6 +19,11 @@ function routes(Category) {
     controller.deleteCategory,
   )
 
+  categoriesRouter.get(
+    '/categories/:categoryId/articles',
+    controller.populateArticles,
+  )
+
   return categoriesRouter
 }
 
