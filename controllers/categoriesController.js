@@ -27,7 +27,15 @@ function categoryController(Category) {
     return res.json(categories)
   }
 
-  return autoCatch({ createCategory, getCategoryList })
+  async function deleteCategory(req, res, next) {
+    console.log(req.category)
+  }
+
+  return autoCatch({
+    createCategory,
+    getCategoryList,
+    deleteCategory,
+  })
 }
 
 module.exports = categoryController

@@ -1,19 +1,23 @@
 const express = require('express')
 
 const categoriesController = require('../controllers/categoriesController')
+const category = require('../middleware/category')
 
 function routes(Category) {
   const categoriesRouter = express.Router()
   const controller = categoriesController(Category)
+  const { fetchCategory } = category(Category)
 
   categoriesRouter
     .route('/categories')
     .get(controller.getCategoryList)
     .post(controller.createCategory)
 
-  categoriesRouter.delete('/categories/:categoryId', (req, res) => {
-    res.json({ msg: 'Delete category' })
-  })
+  categoriesRouter.use('/categories/:categoryId', fetchCategory)
+  categoriesRouter.delete(
+    '/categories/:categoryId',
+    controller.deleteCategory,
+  )
 
   return categoriesRouter
 }
