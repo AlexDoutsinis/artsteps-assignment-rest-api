@@ -4,7 +4,7 @@ const { Schema } = mongoose
 
 const CategoryDto = new Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
   },
   { timestamps: true },

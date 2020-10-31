@@ -19,6 +19,21 @@ function articlesController(Article) {
     return res.status(201).json(article)
   }
 
+  async function getArticles(req, res) {
+    const filter = {}
+    const fields = {}
+    const excludeContent = req.query.excludeContent ? true : false
+
+    if (excludeContent) {
+      fields.content = 0
+    }
+
+    if (req.query.category) {
+    }
+
+    const articles = Article.find({}, fields)
+  }
+
   return { createArticle }
 }
 
