@@ -9,9 +9,7 @@ function routes(Article) {
   articlesRouter
     .route('/articles')
     .post(controller.createArticle)
-    .get((req, res) => {
-      res.json({ msg: 'Get articles' })
-    })
+    .get(controller.getArticles)
 
   articlesRouter
     .route('/articles/:articleId')

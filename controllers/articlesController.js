@@ -24,17 +24,17 @@ function articlesController(Article) {
     const fields = {}
     const excludeContent = req.query.excludeContent ? true : false
 
-    if (excludeContent) {
-      fields.content = 0
-    }
+    const { category } = req.query
+    if (category) filter.category = category
+    if (excludeContent) fields.content = 0
 
-    if (req.query.category) {
-    }
+    const articles = await Article.find(filter, fields)
+    if (!articles) return res.status(400).json('No articles Found')
 
-    const articles = Article.find({}, fields)
+    return res.json(articles)
   }
 
-  return { createArticle }
+  return { createArticle, getArticles }
 }
 
 module.exports = articlesController
