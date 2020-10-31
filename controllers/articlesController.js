@@ -9,9 +9,7 @@ function articlesController(Article) {
     const { title, content, category } = req.body
 
     if (!title || !content || !category)
-      return next(
-        badRequest('Title, Content and Category are required'),
-      )
+      return next(badRequest('Title, Content and Category are required'))
 
     const article = new Article({
       ...req.body,
@@ -24,14 +22,37 @@ function articlesController(Article) {
 
   async function getArticleList(req, res, next) {
     const filter = {}
-    const { category } = req.query
+    const { category, page = 1, limit = 10 } = req.query
     if (category) filter.category = category
 
     const articles = await Article.find(filter, req.payload)
-    if (articles.length < 1)
-      return next(badRequest('No articles Found'))
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+    const count = await Article.countDocuments()
 
-    return res.json(articles)
+    if (articles.length < 1) return next(badRequest('No articles Found'))
+
+    const categoryParam = category ? `?category=${category}&` : ''
+
+    const nextPage =
+      `${req.headers.host}` +
+      `${req.baseUrl}/articles${categoryParam}` +
+      `?page=${page + 1}&?limit=${limit}`
+
+    const prevPage =
+      `${req.headers.host}` +
+      `${req.baseUrl}/articles${categoryParam}` +
+      `?page=${page - 1}&?limit=${limit}`
+
+    const totalPages = Math.ceil(count / limit)
+
+    return res.json({
+      articles,
+      totalPages,
+      currentPage: parseInt(page),
+      nextPage: page < totalPages ? nextPage : null,
+      prevPage: page > 1 ? prevPage : null,
+    })
   }
 
   async function getArticle(req, res) {

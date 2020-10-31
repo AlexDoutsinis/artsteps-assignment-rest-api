@@ -5,8 +5,10 @@ function AppErrors() {
     const statusCode = err.statusCode
     const errorMessage = err.message
 
-    if (!statusCode)
+    if (!statusCode) {
+      console.log(`Error: ${errorMessage}`)
       return res.status(500).json({ error: 'Something went wrong' })
+    }
 
     return res.status(statusCode).json({ error: errorMessage })
   }
