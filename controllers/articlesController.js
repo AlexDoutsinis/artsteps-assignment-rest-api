@@ -19,22 +19,23 @@ function articlesController(Article) {
     return res.status(201).json(article)
   }
 
-  async function getArticles(req, res) {
+  async function getArticleList(req, res) {
     const filter = {}
-    const fields = {}
-    const excludeContent = req.query.excludeContent ? true : false
-
     const { category } = req.query
     if (category) filter.category = category
-    if (excludeContent) fields.content = 0
 
-    const articles = await Article.find(filter, fields)
-    if (!articles) return res.status(400).json('No articles Found')
+    const articles = await Article.find(filter, req.payload)
+    if (!articles)
+      return res.status(400).json({ error: 'No articles Found' })
 
     return res.json(articles)
   }
 
-  return { createArticle, getArticles }
+  async function getArticle(req, res) {
+    return res.json(req.article)
+  }
+
+  return { createArticle, getArticleList, getArticle }
 }
 
 module.exports = articlesController
