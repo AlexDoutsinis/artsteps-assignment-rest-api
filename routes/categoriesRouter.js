@@ -8,9 +8,7 @@ function routes(Category) {
 
   categoriesRouter
     .route('/categories')
-    .get((req, res) => {
-      res.json({ msg: 'Get Categories' })
-    })
+    .get(controller.getCategoryList)
     .post(controller.createCategory)
 
   categoriesRouter.delete('/categories/:categoryId', (req, res) => {
