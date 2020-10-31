@@ -1,4 +1,5 @@
 const { badRequest } = require('../utils/error')()
+const autoCatch = require('../utils/autoCatch')
 
 function categoryController(Category) {
   async function createCategory(req, res, next) {
@@ -10,7 +11,7 @@ function categoryController(Category) {
     return res.status(201).json(category)
   }
 
-  return { createCategory }
+  return autoCatch({ createCategory })
 }
 
 module.exports = categoryController

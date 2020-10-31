@@ -2,6 +2,7 @@ const slugify = require('slugify')
 const { nanoid } = require('nanoid')
 
 const { badRequest } = require('../utils/error')()
+const autoCatch = require('../utils/autoCatch')
 
 function articlesController(Article) {
   async function createArticle(req, res, next) {
@@ -37,7 +38,7 @@ function articlesController(Article) {
     return res.json(req.article)
   }
 
-  return { createArticle, getArticleList, getArticle }
+  return autoCatch({ createArticle, getArticleList, getArticle })
 }
 
 module.exports = articlesController

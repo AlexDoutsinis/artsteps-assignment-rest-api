@@ -19,15 +19,19 @@ const ArticleDto = new Schema(
 )
 
 ArticleDto.post('save', async (article, next) => {
-  await Category.findOneAndUpdate(
-    article.category,
-    {
-      $push: { articles: article._id },
-    },
-    { useFindAndModify: false },
-  )
+  try {
+    await Category.findOneAndUpdate(
+      article.category,
+      {
+        $push: { articles: article._id },
+      },
+      { useFindAndModify: false },
+    )
 
-  next()
+    return next()
+  } catch (err) {
+    return next(err)
+  }
 })
 
 module.exports = mongoose.model('Article', ArticleDto)
