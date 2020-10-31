@@ -27,8 +27,10 @@ function categoryController(Category) {
     return res.json(categories)
   }
 
-  async function deleteCategory(req, res, next) {
-    console.log(req.category)
+  async function deleteCategory(req, res) {
+    await req.category.remove()
+
+    return res.sendStatus(204)
   }
 
   return autoCatch({
