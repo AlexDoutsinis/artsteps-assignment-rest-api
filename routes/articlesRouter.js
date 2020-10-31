@@ -1,13 +1,14 @@
 const express = require('express')
 
-function routes() {
+const articlesController = require('../controllers/articlesController')
+
+function routes(Article) {
   const articlesRouter = express.Router()
+  const controller = articlesController(Article)
 
   articlesRouter
     .route('/articles')
-    .post((req, res) => {
-      res.json({ msg: 'Create an article' })
-    })
+    .post(controller.createArticle)
     .get((req, res) => {
       res.json({ msg: 'Get articles' })
     })

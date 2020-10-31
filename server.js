@@ -9,6 +9,7 @@ function startServer(app) {
     .connect(connectionString, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     })
     .then(() =>
       app.listen(port, () => {
