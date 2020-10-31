@@ -3,7 +3,13 @@ const autoCatch = require('../utils/autoCatch')
 
 function categoryController(Category) {
   async function createCategory(req, res, next) {
-    if (!req.body.name) return next(badRequest('Name is required'))
+    const { name } = req.body
+
+    if (!name) return next(badRequest('Name is required'))
+
+    const alreadyExists = await Category.exists({ name })
+    if (alreadyExists)
+      return next(badRequest('Category already exists'))
 
     const category = new Category(req.body)
     await category.save()
