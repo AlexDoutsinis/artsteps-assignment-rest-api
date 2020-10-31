@@ -51,11 +51,18 @@ function articlesController(Article) {
     return res.json(article)
   }
 
+  async function deleteArticle(req, res, next) {
+    await req.article.remove()
+
+    return res.status(204)
+  }
+
   return autoCatch({
     createArticle,
     getArticleList,
     getArticle,
     patchArticle,
+    deleteArticle,
   })
 }
 
