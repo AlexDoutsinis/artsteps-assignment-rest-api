@@ -19,9 +19,7 @@ function routes(Article) {
   articlesRouter
     .route('/articles/:slug')
     .get(controller.getArticle)
-    .patch((req, res) => {
-      res.json({ msg: 'Partially update of an article' })
-    })
+    .patch(controller.patchArticle)
     .delete((req, res) => {
       res.json({ msg: 'Delete an article' })
     })

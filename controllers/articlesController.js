@@ -38,7 +38,25 @@ function articlesController(Article) {
     return res.json(req.article)
   }
 
-  return autoCatch({ createArticle, getArticleList, getArticle })
+  async function patchArticle(req, res, next) {
+    const { content } = req.body
+
+    if (!content)
+      return next(badRequest('Only content modification is allowed'))
+
+    const { article } = req
+    article.content = content
+    await article.save()
+
+    return res.json(article)
+  }
+
+  return autoCatch({
+    createArticle,
+    getArticleList,
+    getArticle,
+    patchArticle,
+  })
 }
 
 module.exports = articlesController
