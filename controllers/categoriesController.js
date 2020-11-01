@@ -28,7 +28,7 @@ function categoriesController(Category) {
   }
 
   async function deleteCategory(req, res) {
-    await req.category.remove()
+    await repository.removeCategory(req.category)
 
     return res.sendStatus(204)
   }

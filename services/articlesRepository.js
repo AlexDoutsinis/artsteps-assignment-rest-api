@@ -6,6 +6,12 @@ function articlesRepository(Article) {
     return article
   }
 
+  async function fetchArticle(filter, payload) {
+    const article = await Article.findOne(filter, payload)
+
+    return article
+  }
+
   async function fetchAndPaginateArticles({ filter, payload, page, limit }) {
     const articles = await Article.find(filter, payload)
       .limit(limit * 1)
@@ -21,10 +27,16 @@ function articlesRepository(Article) {
     return article
   }
 
+  async function removeArticle(article) {
+    return await article.remove()
+  }
+
   return {
     createArticle,
+    fetchArticle,
     fetchAndPaginateArticles,
     editArticleContent,
+    removeArticle,
   }
 }
 

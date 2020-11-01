@@ -1,9 +1,11 @@
 const { badRequest } = require('../utils/error')()
+const categoriesRepository = require('../services/categoriesRepository')
 
 function category(Category) {
+  const { fetchCategory: getCategory } = categoriesRepository(Category)
+
   async function fetchCategory(req, res, next) {
-    const { categoryId } = req.params
-    const category = await Category.findById(categoryId)
+    const category = await getCategory(req.params.categoryId)
 
     if (!category) return next(badRequest('Category not found'))
 

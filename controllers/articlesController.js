@@ -88,7 +88,7 @@ function articlesController(Article) {
   }
 
   async function deleteArticle(req, res) {
-    await req.article.remove()
+    await repository.removeArticle(req.article)
 
     return res.sendStatus(204)
   }

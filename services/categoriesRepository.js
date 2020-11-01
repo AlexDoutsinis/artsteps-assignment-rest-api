@@ -6,13 +6,23 @@ function categoriesRepository(Category) {
     return category
   }
 
+  async function fetchCategory(id) {
+    const category = await Category.findById(id)
+
+    return category
+  }
+
   async function fetchCategories(payload) {
     const categories = await Category.find({}, payload)
 
     return categories
   }
 
-  return { createCategory, fetchCategories }
+  async function removeCategory(category) {
+    return await category.remove()
+  }
+
+  return { createCategory, fetchCategory, fetchCategories, removeCategory }
 }
 
 module.exports = categoriesRepository
