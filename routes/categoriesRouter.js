@@ -14,15 +14,7 @@ function routes(Category) {
     .post(controller.createCategory)
 
   categoriesRouter.use('/categories/:categoryId', fetchCategory)
-  categoriesRouter.delete(
-    '/categories/:categoryId',
-    controller.deleteCategory,
-  )
-
-  categoriesRouter.get(
-    '/categories/:categoryId/articles',
-    controller.populateArticles,
-  )
+  categoriesRouter.delete('/categories/:categoryId', controller.deleteCategory)
 
   return categoriesRouter
 }

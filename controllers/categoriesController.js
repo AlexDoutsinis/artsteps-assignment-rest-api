@@ -31,21 +31,10 @@ function categoryController(Category) {
     return res.sendStatus(204)
   }
 
-  async function populateArticles(req, res, next) {
-    const articles = await Category.findById(req.params.categoryId).populate(
-      'articles',
-    )
-
-    if (articles < 1) return next(badRequest('No articles found'))
-
-    return res.json(articles)
-  }
-
   return autoCatch({
     createCategory,
     getCategoryList,
     deleteCategory,
-    populateArticles,
   })
 }
 
