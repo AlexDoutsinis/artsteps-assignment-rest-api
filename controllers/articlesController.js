@@ -28,8 +28,10 @@ function articlesController(Article) {
 
   async function getArticleList(req, res, next) {
     const filter = {}
-    const { categoryId, page = 1, limit = 10 } = req.query
+    let { categoryId, page = 1, limit = 10 } = req.query
     if (categoryId) filter.category = categoryId
+    page = parseInt(page)
+    limit = parseInt(limit)
 
     const articles = await Article.find(filter, req.payload)
       .limit(limit * 1)
