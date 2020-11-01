@@ -1,24 +1,26 @@
 const { badRequest } = require('../utils/error')()
 const autoCatch = require('../utils/autoCatch')
+const categoryExists = require('../utils/categoryExists')
+const categoriesRepository = require('../services/categoriesRepository')
 
-function categoryController(Category) {
+function categoriesController(Category) {
+  const repository = categoriesRepository(Category)
+
   async function createCategory(req, res, next) {
     const { name } = req.body
-
     if (!name) return next(badRequest('Name is required'))
 
-    const alreadyExists = await Category.exists({ name })
+    const alreadyExists = await categoryExists({ name })
     if (alreadyExists) return next(badRequest('Category already exists'))
 
-    const category = new Category(req.body)
-    await category.save()
+    const savedCategory = await repository.createCategory(req.body)
 
-    return res.status(201).json(category)
+    return res.status(201).json(savedCategory)
   }
 
   async function getCategoryList(req, res, next) {
     const payload = { articles: 0 }
-    const categories = await Category.find({}, payload)
+    const categories = await repository.fetchCategories(payload)
 
     if (categories.length < 1) return next(badRequest('No categories found'))
 
@@ -38,4 +40,4 @@ function categoryController(Category) {
   })
 }
 
-module.exports = categoryController
+module.exports = categoriesController

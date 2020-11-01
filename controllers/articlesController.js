@@ -3,27 +3,30 @@ const { nanoid } = require('nanoid')
 
 const { badRequest } = require('../utils/error')()
 const autoCatch = require('../utils/autoCatch')
-const Category = require('../Dtos/categoryDto')
+const articlesRepository = require('../services/articlesRepository')
+const exists = require('../utils/categoryExists')
 
 function articlesController(Article) {
+  const repository = articlesRepository(Article)
+
   async function createArticle(req, res, next) {
     const { title, content, categoryId } = req.body
 
     if (!title || !content || !categoryId)
       return next(badRequest('Title, Content and Category are required'))
 
-    const categoryExists = await Category.exists({ _id: categoryId })
+    const categoryExists = await exists({ _id: categoryId })
     if (!categoryExists) return next(badRequest('Category not found'))
 
-    const article = new Article({
+    const article = {
       title,
       content,
       category: categoryId,
       slug: `${slugify(title)}-${nanoid()}`,
-    })
-    await article.save()
+    }
+    const savedArticle = await repository.createArticle(article)
 
-    return res.status(201).json(article)
+    return res.status(201).json(savedArticle)
   }
 
   async function getArticleList(req, res, next) {
@@ -33,9 +36,12 @@ function articlesController(Article) {
     page = parseInt(page)
     limit = parseInt(limit)
 
-    const articles = await Article.find(filter, req.payload)
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
+    const articles = await repository.fetchAndPaginateArticles({
+      filter,
+      payload: req.payload,
+      page,
+      limit,
+    })
     const count = await Article.countDocuments(filter)
 
     if (articles.length < 1) return next(badRequest('No articles Found'))
@@ -73,11 +79,12 @@ function articlesController(Article) {
     if (!content)
       return next(badRequest('Only content modification is allowed'))
 
-    const { article } = req
-    article.content = content
-    await article.save()
+    const editedArticle = await repository.editArticleContent({
+      article: req.article,
+      content,
+    })
 
-    return res.json(article)
+    return res.json(editedArticle)
   }
 
   async function deleteArticle(req, res) {
