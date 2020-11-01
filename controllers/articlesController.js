@@ -36,7 +36,7 @@ function articlesController(Article) {
     const articles = await Article.find(filter, req.payload)
       .limit(limit * 1)
       .skip((page - 1) * limit)
-    const count = await Article.count(filter)
+    const count = await Article.countDocuments(filter)
 
     if (articles.length < 1) return next(badRequest('No articles Found'))
 
