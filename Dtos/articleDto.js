@@ -11,8 +11,8 @@ const ArticleDto = new Schema(
     description: { type: String },
     slug: { type: String, required: true, unique: true },
     category: {
-      type: String,
-      required: true,
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
     },
   },
   { timestamps: true },
@@ -20,7 +20,7 @@ const ArticleDto = new Schema(
 
 ArticleDto.post('save', async (article, next) => {
   try {
-    await Category.findOneAndUpdate(
+    await Category.findByIdAndUpdate(
       article.category,
       {
         $push: { articles: article._id },

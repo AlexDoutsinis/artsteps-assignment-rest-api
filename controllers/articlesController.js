@@ -3,16 +3,22 @@ const { nanoid } = require('nanoid')
 
 const { badRequest } = require('../utils/error')()
 const autoCatch = require('../utils/autoCatch')
+const Category = require('../Dtos/categoryDto')
 
 function articlesController(Article) {
   async function createArticle(req, res, next) {
-    const { title, content, category } = req.body
+    const { title, content, categoryId } = req.body
 
-    if (!title || !content || !category)
+    if (!title || !content || !categoryId)
       return next(badRequest('Title, Content and Category are required'))
 
+    const categoryExists = await Category.exists({ _id: categoryId })
+    if (!categoryExists) return next(badRequest('Category not found'))
+
     const article = new Article({
-      ...req.body,
+      title,
+      content,
+      category: categoryId,
       slug: `${slugify(title)}-${nanoid()}`,
     })
     await article.save()
@@ -22,17 +28,17 @@ function articlesController(Article) {
 
   async function getArticleList(req, res, next) {
     const filter = {}
-    const { category, page = 1, limit = 10 } = req.query
-    if (category) filter.category = category
+    const { categoryId, page = 1, limit = 10 } = req.query
+    if (categoryId) filter.category = categoryId
 
     const articles = await Article.find(filter, req.payload)
       .limit(limit * 1)
       .skip((page - 1) * limit)
-    const count = await Article.countDocuments()
+    const count = await Article.count(filter)
 
     if (articles.length < 1) return next(badRequest('No articles Found'))
 
-    const categoryParam = category ? `?category=${category}&` : ''
+    const categoryParam = categoryId ? `?category=${categoryId}&` : ''
 
     const nextPage =
       `${req.headers.host}` +

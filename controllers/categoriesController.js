@@ -8,8 +8,7 @@ function categoryController(Category) {
     if (!name) return next(badRequest('Name is required'))
 
     const alreadyExists = await Category.exists({ name })
-    if (alreadyExists)
-      return next(badRequest('Category already exists'))
+    if (alreadyExists) return next(badRequest('Category already exists'))
 
     const category = new Category(req.body)
     await category.save()
@@ -21,8 +20,7 @@ function categoryController(Category) {
     const payload = { articles: 0 }
     const categories = await Category.find({}, payload)
 
-    if (categories.length < 1)
-      return next(badRequest('No categories found'))
+    if (categories.length < 1) return next(badRequest('No categories found'))
 
     return res.json(categories)
   }
@@ -34,9 +32,9 @@ function categoryController(Category) {
   }
 
   async function populateArticles(req, res, next) {
-    const articles = await Category.findById(
-      req.params.categoryId,
-    ).populate('articles')
+    const articles = await Category.findById(req.params.categoryId).populate(
+      'articles',
+    )
 
     if (articles < 1) return next(badRequest('No articles found'))
 
