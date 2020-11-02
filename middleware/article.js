@@ -2,7 +2,7 @@ const { badRequest } = require('../utils/error')()
 const articlesRepository = require('../services/articlesRepository')
 
 function article(Article) {
-  const { fetchArticle: getArticle } = articlesRepository(Article)
+  const repository = articlesRepository(Article)
 
   async function includePayload(req, res, next) {
     const payload = {}
@@ -15,7 +15,7 @@ function article(Article) {
 
   async function fetchArticle(req, res, next) {
     const { slug } = req.params
-    const article = await getArticle({ slug }, req.payload)
+    const article = await repository.fetchArticle({ slug }, req.payload)
     if (!article) return next(badRequest('Article not found'))
 
     req.article = article

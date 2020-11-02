@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 function startServer(app) {
   const connectionString =
     'mongodb+srv://Alex123:alex123@cluster0.bhwtm.mongodb.net/artstepsAssignment?retryWrites=true&w=majority'
-  const port = process.env.PORT || 3000
+  const port = process.env.PORT || 4000
 
   mongoose
     .connect(connectionString, {
