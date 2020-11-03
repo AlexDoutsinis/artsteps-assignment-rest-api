@@ -7,6 +7,7 @@ function article(Article) {
   async function includePayload(req, res, next) {
     const payload = {}
     const excludeContent = req.query.excludeContent ? true : false
+    console.log(req.query)
 
     if (excludeContent) payload.content = 0
     req.payload = payload

@@ -16,6 +16,7 @@ function articlesRepository(Article) {
     const articles = await Article.find(filter, payload)
       .limit(limit * 1)
       .skip((page - 1) * limit)
+      .populate('category')
 
     return articles
   }

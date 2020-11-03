@@ -46,17 +46,23 @@ function articlesController(Article) {
 
     if (articles.length < 1) return next(badRequest('No articles Found'))
 
-    const categoryParam = categoryId ? `?category=${categoryId}&` : ''
+    const noContent = req.payload.content === 0 ? true : false
+    const excludeContent = noContent ? `&excludeContent=true` : ''
+    const categoryParam = categoryId ? `&category=${categoryId}` : ''
 
     const nextPage =
       `${req.headers.host}` +
-      `${req.baseUrl}/articles${categoryParam}` +
-      `?page=${page + 1}&?limit=${limit}`
+      `${req.baseUrl}/articles` +
+      `?page=${page + 1}&limit=${limit}` +
+      excludeContent +
+      categoryParam
 
     const prevPage =
       `${req.headers.host}` +
-      `${req.baseUrl}/articles${categoryParam}` +
-      `?page=${page - 1}&?limit=${limit}`
+      `${req.baseUrl}/articles` +
+      `?page=${page - 1}&limit=${limit}` +
+      excludeContent +
+      categoryParam
 
     const totalPages = Math.ceil(count / limit)
 
