@@ -6,8 +6,8 @@ function categoriesRepository(Category) {
     return category
   }
 
-  async function fetchCategory(id) {
-    const category = await Category.findById(id)
+  async function fetchCategory(filter) {
+    const category = await Category.findOne(filter)
 
     return category
   }

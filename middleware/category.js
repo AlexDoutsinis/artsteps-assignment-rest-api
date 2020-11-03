@@ -5,7 +5,9 @@ function category(Category) {
   const repository = categoriesRepository(Category)
 
   async function fetchCategory(req, res, next) {
-    const category = await repository.fetchCategory(req.params.categoryId)
+    const category = await repository.fetchCategory({
+      name: req.params.categoryName,
+    })
 
     if (!category) return next(badRequest('Category not found'))
 

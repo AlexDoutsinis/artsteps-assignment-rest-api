@@ -13,8 +13,11 @@ function routes(Category) {
     .get(controller.getCategoryList)
     .post(controller.createCategory)
 
-  categoriesRouter.use('/categories/:categoryId', fetchCategory)
-  categoriesRouter.delete('/categories/:categoryId', controller.deleteCategory)
+  categoriesRouter.use('/categories/:categoryName', fetchCategory)
+  categoriesRouter.delete(
+    '/categories/:categoryName',
+    controller.deleteCategory,
+  )
 
   return categoriesRouter
 }
