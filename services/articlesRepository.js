@@ -3,7 +3,11 @@ function articlesRepository(Article) {
     const article = new Article(body)
     await article.save()
 
-    return article
+    const articleWithCategory = await Article.findById({
+      _id: article._id,
+    }).populate('category')
+
+    return articleWithCategory
   }
 
   async function fetchArticle(filter, payload) {
@@ -14,6 +18,7 @@ function articlesRepository(Article) {
 
   async function fetchAndPaginateArticles({ filter, payload, page, limit }) {
     const articles = await Article.find(filter, payload)
+      .sort({ createdAt: 'desc' })
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .populate('category')

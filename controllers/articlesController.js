@@ -10,7 +10,7 @@ function articlesController(Article) {
   const repository = articlesRepository(Article)
 
   async function createArticle(req, res, next) {
-    const { title, content, categoryId } = req.body
+    const { title, content, description, categoryId } = req.body
 
     if (!title || !content || !categoryId)
       return next(badRequest('Title, Content and Category are required'))
@@ -20,6 +20,7 @@ function articlesController(Article) {
 
     const article = {
       title,
+      description,
       content,
       category: categoryId,
       slug: `${slugify(title)}-${nanoid()}`,
@@ -51,14 +52,14 @@ function articlesController(Article) {
     const categoryParam = categoryId ? `&category=${categoryId}` : ''
 
     const nextPage =
-      `${req.headers.host}` +
+      // `${req.headers.host}` +
       `${req.baseUrl}/articles` +
       `?page=${page + 1}&limit=${limit}` +
       excludeContent +
       categoryParam
 
     const prevPage =
-      `${req.headers.host}` +
+      // `${req.headers.host}` +
       `${req.baseUrl}/articles` +
       `?page=${page - 1}&limit=${limit}` +
       excludeContent +
