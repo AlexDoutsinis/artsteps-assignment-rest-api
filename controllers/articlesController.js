@@ -32,8 +32,12 @@ function articlesController(Article) {
 
   async function getArticleList(req, res, next) {
     const filter = {}
-    let { categoryId, page = 1, limit = 10 } = req.query
+    let { categoryId, page = 1, limit = 10, search } = req.query
     if (categoryId) filter.category = categoryId
+    if (search) {
+      filter.$text = {}
+      filter.$text.$search = search
+    }
     page = parseInt(page)
     limit = parseInt(limit)
 
@@ -52,14 +56,12 @@ function articlesController(Article) {
     const categoryParam = categoryId ? `&category=${categoryId}` : ''
 
     const nextPage =
-      // `${req.headers.host}` +
       `${req.baseUrl}/articles` +
       `?page=${page + 1}&limit=${limit}` +
       excludeContent +
       categoryParam
 
     const prevPage =
-      // `${req.headers.host}` +
       `${req.baseUrl}/articles` +
       `?page=${page - 1}&limit=${limit}` +
       excludeContent +

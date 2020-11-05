@@ -18,6 +18,8 @@ const ArticleDto = new Schema(
   { timestamps: true },
 )
 
+ArticleDto.index({ title: 'text' })
+
 ArticleDto.post('save', async (article, next) => {
   try {
     await Category.findByIdAndUpdate(
